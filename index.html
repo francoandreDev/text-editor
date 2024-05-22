@@ -9,21 +9,19 @@
     <script src="main.js" defer></script>
 </head>
 
-<body>
+<body class="dark-mode">
     <header id="files">
-        <!-- <span match-textarea-id="id-text-area">
-            Unnamed by default
-        </span> -->
-        <span class="filename current">Default Name</span>
-        <span class="filename">New</span>
+        <button class="btn-action" id="newFileBtn">Nuevo</button>
+        <button class="btn-action" id="openFileBtn">Abrir</button>
+        <button class="btn-action" id="toggleModeBtn"></button>
     </header>
     <main id="contents">
-        <!-- <textarea id="id-text-area">
-            ?text goes here
-        </textarea> -->
-        <textarea class="content current" autofocus autocomplete="off">
-        </textarea>
+        <b class="message recommend">El uso recomendado es para la creación y la edición de archivos de
+            texto.</b>
+        <b class="message warning">Si se ha editado externamente usa el botón
+            abrir</b>
     </main>
+
 </body>
 
 </html>
