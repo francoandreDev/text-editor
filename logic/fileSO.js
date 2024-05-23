@@ -8,7 +8,7 @@ class File {
         this.main = main;
         this.newFileBtn = newFileBtn;
         this.openFileBtn = openFileBtn;
-        this.currentFileHandle = null;
+        this.currentFileHandleWrapper = { currentFileHandle: null };
         this.currentIndex = 0;
         this.fileHandles = [];
         this.so = so;
@@ -16,10 +16,7 @@ class File {
 
     eventListeners() {
         this.newFileBtn.addEventListener("click", this.createNewTab.bind(this));
-        this.openFileBtn.addEventListener(
-            "click",
-            this.openExistingFile.bind(this)
-        );
+        this.openFileBtn.addEventListener("click", this.openExistingFile.bind(this));
         this.header.addEventListener("click", this.switchTab.bind(this));
         this.main.addEventListener(
             "input",
@@ -40,28 +37,24 @@ class File {
                 name: newFileName,
                 blob: null,
             });
+            this.currentIndex = this.fileHandles.length - 1;
+            this.currentFileHandleWrapper.currentFileHandle = null;
+            console.log(`New tab created for ${newFileName} at index ${this.currentIndex}`);
         }
     }
 
     async openExistingFile() {
         switch (this.so) {
             case "android":
-                await AndroidFile.openExistingFile(
-                    this.createTab.bind(this),
-                    this.fileHandles
-                );
+                await AndroidFile.openExistingFile(this.createTab.bind(this), this.fileHandles);
                 break;
             default:
-                await WindowsFile.openExistingFile(
-                    this.createTab.bind(this),
-                    this.fileHandles
-                );
+                await WindowsFile.openExistingFile(this.createTab.bind(this), this.fileHandles);
         }
     }
 
     async saveContent() {
         this.saveCurrentContent();
-        const currentFileHandle = this.fileHandles[this.currentIndex];
         switch (this.so) {
             case "android":
                 await AndroidFile.saveContent(
@@ -75,7 +68,7 @@ class File {
             default:
                 await WindowsFile.saveContent(
                     this.saveCurrentContent.bind(this),
-                    currentFileHandle,
+                    this.currentFileHandleWrapper,
                     this.header,
                     this.fileHandles,
                     this.main,
@@ -99,7 +92,7 @@ class File {
             <textarea class="content" id="content" autofocus autocomplete="off">${content}</textarea>
         `;
 
-        this.currentFileHandle = this.fileHandles[this.currentIndex] || null;
+        this.currentFileHandleWrapper.currentFileHandle = this.fileHandles[this.currentIndex] || null;
     }
 
     switchTab(event) {
@@ -109,15 +102,12 @@ class File {
             const filenameElements = document.querySelectorAll(".filename");
             filenameElements.forEach((el) => el.classList.remove("current"));
             event.target.classList.add("current");
-            this.currentIndex = Array.from(filenameElements).indexOf(
-                event.target
-            );
+            this.currentIndex = Array.from(filenameElements).indexOf(event.target);
             const content = this.currentContent;
             this.main.innerHTML = `
                 <textarea class="content" id="content" autofocus autocomplete="off">${content}</textarea>
             `;
-            this.currentFileHandle =
-                this.fileHandles[this.currentIndex] || null;
+            this.currentFileHandleWrapper.currentFileHandle = this.fileHandles[this.currentIndex] || null;
         }
     }
 
@@ -170,10 +160,4 @@ const main = document.getElementById("contents");
 const newFileBtn = document.getElementById("newFileBtn");
 const openFileBtn = document.getElementById("openFileBtn");
 
-export const file = new File(
-    header,
-    main,
-    newFileBtn,
-    openFileBtn,
-    detectSO.so
-);
+export const file = new File(header, main, newFileBtn, openFileBtn, detectSO.so);
