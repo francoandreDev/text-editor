@@ -1,5 +1,3 @@
-// fileSO.js
-
 import { WindowsFile } from "../lib/onWindows.js";
 import { AndroidFile } from "../lib/onAndroid.js"; // Import AndroidFile
 
