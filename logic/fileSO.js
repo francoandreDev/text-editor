@@ -66,6 +66,7 @@ class File {
             case "android":
                 await AndroidFile.saveContent(
                     this.saveCurrentContent.bind(this),
+                    currentFileHandle,
                     this.header,
                     this.fileHandles,
                     this.main,
