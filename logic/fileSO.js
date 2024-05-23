@@ -23,7 +23,7 @@ class File {
         this.header.addEventListener("click", this.switchTab.bind(this));
         this.main.addEventListener(
             "input",
-            this.debounce(this.saveContent.bind(this), 1000)
+            this.debounce(this.saveContent.bind(this), this.so === "android" ? 15000 : 2000)
         );
     }
 
