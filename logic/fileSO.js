@@ -1,5 +1,5 @@
 import { WindowsFile } from "../lib/onWindows.js";
-import { AndroidFile } from "../lib/onAndroid.js"; 
+import { AndroidFile } from "../lib/onAndroid.js"; // Import AndroidFile
 
 class File {
     constructor(header, main, newFileBtn, openFileBtn, so) {
@@ -66,7 +66,6 @@ class File {
             case "android":
                 await AndroidFile.saveContent(
                     this.saveCurrentContent.bind(this),
-                    currentFileHandle,
                     this.header,
                     this.fileHandles,
                     this.main,
