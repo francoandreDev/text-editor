@@ -1,5 +1,5 @@
 import { WindowsFile } from "../lib/onWindows.js";
-import { AndroidFile } from "../lib/onAndroid.js"; 
+import { AndroidFile } from "../lib/onAndroid.js";
 
 class File {
     constructor(header, main, newFileBtn, openFileBtn, so) {
