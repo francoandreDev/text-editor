@@ -6,14 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HighTxt</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="main.js" defer></script>
+    <script type="module" src="lib/onWindows.js"></script>
+    <script type="module" src="logic/themes.js" defer></script>
+    <script type="module" src="lib/onAndroid.js" defer></script>
+    <script type="module" src="main.js" defer></script>
 </head>
 
 <body class="dark-mode">
     <header id="files">
         <button class="btn-action" id="newFileBtn">Nuevo</button>
         <button class="btn-action" id="openFileBtn">Abrir</button>
-        <button class="btn-action" id="toggleModeBtn"></button>
+        <button class="btn-action" id="switcherBtn"></button>
     </header>
     <main id="contents">
         <b class="message recommend">El uso recomendado es para la creación y la edición de archivos de
