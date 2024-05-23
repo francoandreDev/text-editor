@@ -37,7 +37,7 @@ class File {
         const newFileName = prompt("Enter the new file name:", "Untitled.txt");
         if (newFileName) {
             this.createTab(newFileName, "");
-            this.fileHandles.push(null);
+            this.fileHandles.push({ name: newFileName, content: "" });
         }
     }
 
@@ -146,6 +146,7 @@ class DetectSO {
     constructor() {
         this.so = this.detectOS();
     }
+
     detectOS() {
         const userAgent = navigator.userAgent.toLowerCase();
         if (
