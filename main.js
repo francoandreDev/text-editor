@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     file.eventListeners();
 });
 
-// Todo - Add support for android
 // Todo - Add support for ios
 // Todo - Refactor code
 // Todo - Add support for multiple files
