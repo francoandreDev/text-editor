@@ -37,7 +37,11 @@ class File {
         const newFileName = prompt("Enter the new file name:", "Untitled.txt");
         if (newFileName) {
             this.createTab(newFileName, "");
-            this.fileHandles.push({ name: newFileName, content: "" });
+            this.fileHandles.push({
+                handle: null,
+                name: newFileName,
+                blob: null,
+            });
         }
     }
 
