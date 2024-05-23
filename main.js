@@ -177,3 +177,10 @@ document.addEventListener("DOMContentLoaded", () => {
     theme.toggleMode();
     const file = new File(header, main, newFileBtn, openFileBtn);
 });
+
+// Todo - Add support for android
+// Todo - Add support for ios
+// Todo - Refactor code
+// Todo - Add support for multiple files
+// Todo - Add support for saving multiple files
+// Todo - Refactor code
