@@ -1,4 +1,7 @@
+// fileSO.js
+
 import { WindowsFile } from "../lib/onWindows.js";
+import { AndroidFile } from "../lib/onAndroid.js"; // Import AndroidFile
 
 class File {
     constructor(header, main, newFileBtn, openFileBtn, so) {
@@ -9,7 +12,7 @@ class File {
         this.openFileBtn = openFileBtn;
         this.currentFileHandle = null;
         this.currentIndex = 0;
-        this.fileHandles = []; 
+        this.fileHandles = [];
         this.so = so;
     }
 
@@ -41,7 +44,10 @@ class File {
     async openExistingFile() {
         switch (this.so) {
             case "android":
-                //await AndroidFile.openExistingFile(this.createTab.bind(this), this.fileHandles);
+                await AndroidFile.openExistingFile(
+                    this.createTab.bind(this),
+                    this.fileHandles
+                );
                 break;
             default:
                 await WindowsFile.openExistingFile(
@@ -56,7 +62,14 @@ class File {
         const currentFileHandle = this.fileHandles[this.currentIndex];
         switch (this.so) {
             case "android":
-                //await AndroidFile.saveContent(this.saveCurrentContent.bind(this), currentFileHandle, this.header, this.fileHandles, this.main, this.currentIndex);
+                await AndroidFile.saveContent(
+                    this.saveCurrentContent.bind(this),
+                    currentFileHandle,
+                    this.header,
+                    this.fileHandles,
+                    this.main,
+                    this.currentIndex
+                );
                 break;
             default:
                 await WindowsFile.saveContent(
@@ -77,7 +90,7 @@ class File {
         newSpan.textContent = fileName;
         this.header.insertBefore(newSpan, this.newFileBtn);
 
-        this.__content.push(content); 
+        this.__content.push(content);
         this.currentIndex = this.__content.length - 1;
         this.updateCurrentTab(newSpan);
 
@@ -85,7 +98,7 @@ class File {
             <textarea class="content" id="content" autofocus autocomplete="off">${content}</textarea>
         `;
 
-        this.currentFileHandle = this.fileHandles[this.currentIndex] || null; 
+        this.currentFileHandle = this.fileHandles[this.currentIndex] || null;
     }
 
     switchTab(event) {
@@ -131,16 +144,21 @@ class File {
 
 class DetectSO {
     constructor() {
-        this.so = this.detectWindowsOS();
+        this.so = this.detectOS();
     }
-    detectWindowsOS() {
+    detectOS() {
         const userAgent = navigator.userAgent.toLowerCase();
-        this.so =
+        if (
             userAgent.indexOf("windows nt") !== -1 ||
             userAgent.indexOf("win32") !== -1 ||
             userAgent.indexOf("win64") !== -1
-                ? "Windows"
-                : "Not Windows";
+        ) {
+            return "windows";
+        } else if (userAgent.indexOf("android") !== -1) {
+            return "android";
+        } else {
+            return "unknown";
+        }
     }
 }
 
