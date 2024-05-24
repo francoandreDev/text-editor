@@ -3,7 +3,6 @@ class Theme {
         this.themes = [
             { mode: "light-mode", name: "modo claro" },
             { mode: "dark-mode", name: "modo oscuro" },
-            // Añadir más temas aquí
         ];
         this.switcherBtn = switcherBtn;
         this.current = 0;

@@ -45,9 +45,6 @@ class File {
             });
             this.currentIndex = this.fileHandles.length - 1;
             this.currentFileHandleWrapper.currentFileHandle = null;
-            console.log(
-                `New tab created for ${newFileName} at index ${this.currentIndex}`
-            );
         }
     }
 
@@ -92,15 +89,14 @@ class File {
     }
 
     createTab(fileName, content) {
-        const newNav = document.createElement("nav");
-        newNav.classList.add("filename");
-        newNav.setAttribute("contenteditable", "true");
-        newNav.textContent = fileName;
-        this.header.appendChild(newNav);
+        const newSpan = document.createElement("span");
+        newSpan.classList.add("filename");
+        newSpan.textContent = fileName;
+        this.header.appendChild(newSpan);
 
         this.__content.push(content);
         this.currentIndex = this.__content.length - 1;
-        this.updateCurrentTab(newNav);
+        this.updateCurrentTab(newSpan);
 
         this.main.innerHTML = `
             <textarea class="content" id="content" autofocus autocomplete="off">${content}</textarea>

@@ -5,6 +5,7 @@ body.light-mode {
     --accent-default-color: #2f2f2f;
     --background-color: #dedede;
     --background-accent-color: #cacaca;
+    --highlight-color: #0054ca;
 }
 
 body.dark-mode {
@@ -12,6 +13,7 @@ body.dark-mode {
     --accent-default-color: #ddd;
     --background-color: #2d2d2d;
     --background-accent-color: #555;
+    --highlight-color: #08bbe8;
 }
 
 /* Apply theme */
@@ -58,10 +60,17 @@ header .filename {
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 3px;
+
+    &:hover {
+        font-weight: bolder;
+    }
+
+    &.current {
+        color: var(--highlight-color);
+    }
 }
 
 header .btn-action {
-    background-color: var(--light-accent-color);
     border: none;
     padding: 5px 10px;
     border-radius: 3px;
@@ -70,7 +79,7 @@ header .btn-action {
 }
 
 header .btn-action:hover {
-    background-color: #0492ff;
+    background-color: var(--highlight-color);
 }
 
 header > .files {

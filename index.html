@@ -17,9 +17,9 @@
         <section class="files">
         </section>
         <section class="actions">
-            <button class="btn-action bg-accent" id="newFileBtn">Nuevo</button>
-            <button class="btn-action bg-accent" id="openFileBtn">Abrir</button>
-            <button class="btn-action bg-accent" id="switcherBtn"></button>
+            <button onclick="closeBurger()" class="btn-action bg-accent" id="newFileBtn">Nuevo</button>
+            <button onclick="closeBurger()" class="btn-action bg-accent" id="openFileBtn">Abrir</button>
+            <button onclick="closeBurger()" class="btn-action bg-accent" id="switcherBtn"></button>
         </section>
         <section class="burger relative">
             <input type="checkbox" aria-label="Menu" class="burger absolute full-size">
@@ -42,6 +42,11 @@
             nombre de
             archivo ya existe pedirá confirmación.</b>
     </main>
+    <script>
+        function closeBurger() {
+            document.querySelector("input.burger").checked = false
+        }
+    </script>
 </body>
 
 </html>
