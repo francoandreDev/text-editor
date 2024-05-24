@@ -1,10 +1,13 @@
 class Theme {
-    themes = ["light-mode", "dark-mode"];
-    names = ["modo claro", "modo oscuro"];
     constructor(switcherBtn) {
+        this.themes = [
+            { mode: "light-mode", name: "modo claro" },
+            { mode: "dark-mode", name: "modo oscuro" },
+            // Añadir más temas aquí
+        ];
         this.switcherBtn = switcherBtn;
         this.current = 0;
-        this.switcherBtn.textContent = this.currentNameTheme;
+        this.switcherBtn.textContent = this.currentTheme.name;
     }
 
     eventListener() {
@@ -12,17 +15,15 @@ class Theme {
     }
 
     get previousCurrent() {
-        if (this.current === 0) return this.themes.length - 1;
-        return this.current - 1;
+        return this.current === 0 ? this.themes.length - 1 : this.current - 1;
     }
 
     get nextCurrent() {
-        if (this.current === this.themes.length - 1) return 0;
-        return this.current + 1;
+        return this.current === this.themes.length - 1 ? 0 : this.current + 1;
     }
 
     get previousTheme() {
-        return this.themes[this.previousCurrent];
+        return this.themes[this.previousCurrent].mode;
     }
 
     get currentTheme() {
@@ -33,27 +34,19 @@ class Theme {
         return this.themes[this.nextCurrent];
     }
 
-    get currentNameTheme() {
-        return this.names[this.current];
-    }
-
-    get nextNameTheme() {
-        return this.names[this.nextCurrent];
-    }
-
     updateCurrent() {
-        if (this.current === this.themes.length - 1) this.current = 0;
-        else this.current++;
+        this.current = this.nextCurrent;
     }
 
     changeMode() {
         document.body.classList.remove(this.previousTheme);
-        document.body.classList.add(this.currentTheme);
-        this.switcherBtn.textContent = this.nextNameTheme;
+        document.body.classList.add(this.currentTheme.mode);
+        this.switcherBtn.textContent = this.nextTheme.name;
         this.updateCurrent();
     }
 }
 
 const switcherBtn = document.getElementById("switcherBtn");
 const currentTheme = new Theme(switcherBtn);
+
 export { currentTheme };

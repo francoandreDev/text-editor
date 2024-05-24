@@ -4,7 +4,7 @@ import { AndroidFile } from "../lib/onAndroid.js";
 class File {
     constructor(header, main, newFileBtn, openFileBtn, so) {
         this.__content = [];
-        this.header = header;
+        this.header = header.querySelector(".files");
         this.main = main;
         this.newFileBtn = newFileBtn;
         this.openFileBtn = openFileBtn;
@@ -16,11 +16,17 @@ class File {
 
     eventListeners() {
         this.newFileBtn.addEventListener("click", this.createNewTab.bind(this));
-        this.openFileBtn.addEventListener("click", this.openExistingFile.bind(this));
+        this.openFileBtn.addEventListener(
+            "click",
+            this.openExistingFile.bind(this)
+        );
         this.header.addEventListener("click", this.switchTab.bind(this));
         this.main.addEventListener(
             "input",
-            this.debounce(this.saveContent.bind(this), this.so === "android" ? 15000 : 2000)
+            this.debounce(
+                this.saveContent.bind(this),
+                this.so === "android" ? 15000 : 2000
+            )
         );
     }
 
@@ -39,17 +45,25 @@ class File {
             });
             this.currentIndex = this.fileHandles.length - 1;
             this.currentFileHandleWrapper.currentFileHandle = null;
-            console.log(`New tab created for ${newFileName} at index ${this.currentIndex}`);
+            console.log(
+                `New tab created for ${newFileName} at index ${this.currentIndex}`
+            );
         }
     }
 
     async openExistingFile() {
         switch (this.so) {
             case "android":
-                await AndroidFile.openExistingFile(this.createTab.bind(this), this.fileHandles);
+                await AndroidFile.openExistingFile(
+                    this.createTab.bind(this),
+                    this.fileHandles
+                );
                 break;
             default:
-                await WindowsFile.openExistingFile(this.createTab.bind(this), this.fileHandles);
+                await WindowsFile.openExistingFile(
+                    this.createTab.bind(this),
+                    this.fileHandles
+                );
         }
     }
 
@@ -78,21 +92,22 @@ class File {
     }
 
     createTab(fileName, content) {
-        const newSpan = document.createElement("span");
-        newSpan.classList.add("filename");
-        newSpan.setAttribute("contenteditable", "true");
-        newSpan.textContent = fileName;
-        this.header.insertBefore(newSpan, this.newFileBtn);
+        const newNav = document.createElement("nav");
+        newNav.classList.add("filename");
+        newNav.setAttribute("contenteditable", "true");
+        newNav.textContent = fileName;
+        this.header.appendChild(newNav);
 
         this.__content.push(content);
         this.currentIndex = this.__content.length - 1;
-        this.updateCurrentTab(newSpan);
+        this.updateCurrentTab(newNav);
 
         this.main.innerHTML = `
             <textarea class="content" id="content" autofocus autocomplete="off">${content}</textarea>
         `;
 
-        this.currentFileHandleWrapper.currentFileHandle = this.fileHandles[this.currentIndex] || null;
+        this.currentFileHandleWrapper.currentFileHandle =
+            this.fileHandles[this.currentIndex] || null;
     }
 
     switchTab(event) {
@@ -102,19 +117,22 @@ class File {
             const filenameElements = document.querySelectorAll(".filename");
             filenameElements.forEach((el) => el.classList.remove("current"));
             event.target.classList.add("current");
-            this.currentIndex = Array.from(filenameElements).indexOf(event.target);
+            this.currentIndex = Array.from(filenameElements).indexOf(
+                event.target
+            );
             const content = this.currentContent;
             this.main.innerHTML = `
                 <textarea class="content" id="content" autofocus autocomplete="off">${content}</textarea>
             `;
-            this.currentFileHandleWrapper.currentFileHandle = this.fileHandles[this.currentIndex] || null;
+            this.currentFileHandleWrapper.currentFileHandle =
+                this.fileHandles[this.currentIndex] || null;
         }
     }
 
-    updateCurrentTab(span) {
+    updateCurrentTab(nav) {
         const filenameElements = document.querySelectorAll(".filename");
         filenameElements.forEach((el) => el.classList.remove("current"));
-        span.classList.add("current");
+        nav.classList.add("current");
     }
 
     saveCurrentContent() {
@@ -160,4 +178,10 @@ const main = document.getElementById("contents");
 const newFileBtn = document.getElementById("newFileBtn");
 const openFileBtn = document.getElementById("openFileBtn");
 
-export const file = new File(header, main, newFileBtn, openFileBtn, detectSO.so);
+export const file = new File(
+    header,
+    main,
+    newFileBtn,
+    openFileBtn,
+    detectSO.so
+);
