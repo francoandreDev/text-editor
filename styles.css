@@ -46,6 +46,10 @@ body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+::-webkit-scrollbar {
+    width: 0;
+}
+
 /* Header */
 header {
     border-bottom: 1px solid;

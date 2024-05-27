@@ -100,7 +100,7 @@ class File {
 
         this.main.innerHTML = `
             <textarea class="content" id="content" autofocus autocomplete="off">${content}</textarea>
-        `;
+            `;
 
         this.currentFileHandleWrapper.currentFileHandle =
             this.fileHandles[this.currentIndex] || null;

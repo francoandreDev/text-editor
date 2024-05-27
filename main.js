@@ -5,3 +5,4 @@ document.addEventListener("DOMContentLoaded", () => {
     currentTheme.eventListener();
     file.eventListeners();
 });
+
