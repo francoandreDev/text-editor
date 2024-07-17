@@ -1,14 +1,7 @@
-import { WindowsFile } from "../lib/onWindows.js";
 import { AndroidFile } from "../lib/onAndroid.js";
+import { WindowsFile } from "../lib/onWindows.js";
+import { moveCursorToEnd } from "../utils/textarea.js";
 import { os } from "../lib/DetectOS.js";
-
-class TabHandler {}
-
-class OpenFile {}
-
-class SaveFile {}
-
-class NewFile {}
 
 class File {
     constructor(...args) {
@@ -116,6 +109,8 @@ class File {
         this.updateCurrentTab(newSpan);
 
         this.contentsElement.innerHTML = `<textarea class="content" id="content" autocomplete="off">${content}</textarea>`;
+        const textarea = document.getElementById("content");
+        moveCursorToEnd(textarea);
         this.filesWrapper.current = this.fileHandles[this.currentIndex] || null;
     }
 
@@ -131,6 +126,8 @@ class File {
             );
             const content = this.currentContent;
             this.contentsElement.innerHTML = `<textarea class="content" id="content" autocomplete="off">${content}</textarea>`;
+            const textarea = document.getElementById("content");
+            moveCursorToEnd(textarea);
             this.filesWrapper.current =
                 this.fileHandles[this.currentIndex] || null;
         }
