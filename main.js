@@ -1,4 +1,4 @@
-import { file } from "./logic/fileSO.js";
+import { file } from "./logic/file.js";
 import { currentTheme } from "./logic/themes.js";
 
 document.addEventListener("DOMContentLoaded", () => {

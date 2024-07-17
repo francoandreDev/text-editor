@@ -1,56 +1,60 @@
 class Theme {
-    themes = ["light-mode", "dark-mode"];
-    names = ["modo claro", "modo oscuro"];
     constructor(switcherBtn) {
+        this.initializeVariables();
         this.switcherBtn = switcherBtn;
+        this.switcherBtn.textContent = this.currentName;
+    }
+
+    initializeVariables() {
+        this.modes = ["light-mode", "dark-mode"];
+        this.names = ["modo claro", "modo oscuro"];
         this.current = 0;
-        this.switcherBtn.textContent = this.currentNameTheme;
     }
 
     eventListener() {
         this.switcherBtn.addEventListener("click", this.changeMode.bind(this));
     }
 
-    get previousCurrent() {
-        if (this.current === 0) return this.themes.length - 1;
+    get previousMode() {
+        if (this.current === 0) return this.modes.length - 1;
         return this.current - 1;
     }
 
-    get nextCurrent() {
-        if (this.current === this.themes.length - 1) return 0;
+    get nextMode() {
+        if (this.current === this.modes.length - 1) return 0;
         return this.current + 1;
     }
 
     get previousTheme() {
-        return this.themes[this.previousCurrent];
+        return this.modes[this.previousMode];
     }
 
     get currentTheme() {
-        return this.themes[this.current];
+        return this.modes[this.current];
     }
 
     get nextTheme() {
-        return this.themes[this.nextCurrent];
+        return this.modes[this.nextMode];
     }
 
-    get currentNameTheme() {
+    get currentName() {
         return this.names[this.current];
     }
 
-    get nextNameTheme() {
-        return this.names[this.nextCurrent];
+    get nextName() {
+        return this.names[this.nextMode];
     }
 
-    updateCurrent() {
-        if (this.current === this.themes.length - 1) this.current = 0;
+    updateMode() {
+        if (this.current === this.modes.length - 1) this.current = 0;
         else this.current++;
     }
 
     changeMode() {
         document.body.classList.remove(this.previousTheme);
         document.body.classList.add(this.currentTheme);
-        this.switcherBtn.textContent = this.nextNameTheme;
-        this.updateCurrent();
+        this.switcherBtn.textContent = this.nextName;
+        this.updateMode();
     }
 }
 
