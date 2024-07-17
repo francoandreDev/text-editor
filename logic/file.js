@@ -2,15 +2,23 @@ import { WindowsFile } from "../lib/onWindows.js";
 import { AndroidFile } from "../lib/onAndroid.js";
 import { os } from "../lib/DetectOS.js";
 
+class TabHandler {}
+
+class OpenFile {}
+
+class SaveFile {}
+
+class NewFile {}
+
 class File {
-    constructor(operatingSystem) {
-        this.os = operatingSystem;
-
-        this.filesElement = document.getElementById("files");
-        this.contentsElement = document.getElementById("contents");
-        this.newFileElement = document.getElementById("newFileBtn");
-        this.openFileElement = document.getElementById("openFileBtn");
-
+    constructor(...args) {
+        [
+            this.os,
+            this.filesElement,
+            this.contentsElement,
+            this.newFileElement,
+            this.openFileElement,
+        ] = args;
         this.initializeVariables();
     }
 
@@ -79,7 +87,6 @@ class File {
         switch (this.os) {
             case "android":
                 await AndroidFile.saveContent(
-                    this.saveCurrentContent.bind(this),
                     this.filesElement,
                     this.fileHandles,
                     this.contentsElement,
@@ -88,7 +95,6 @@ class File {
                 break;
             default:
                 await WindowsFile.saveContent(
-                    this.saveCurrentContent.bind(this),
                     this.filesWrapper,
                     this.filesElement,
                     this.fileHandles,
@@ -109,10 +115,7 @@ class File {
         this.currentIndex = this.__contents.length - 1;
         this.updateCurrentTab(newSpan);
 
-        this.contentsElement.innerHTML = `
-            <textarea class="content" id="content" autocomplete="off">${content}</textarea>
-        `;
-
+        this.contentsElement.innerHTML = `<textarea class="content" id="content" autocomplete="off">${content}</textarea>`;
         this.filesWrapper.current = this.fileHandles[this.currentIndex] || null;
     }
 
@@ -127,9 +130,7 @@ class File {
                 event.target
             );
             const content = this.currentContent;
-            this.contentsElement.innerHTML = `
-                <textarea class="content" id="content" autocomplete="off">${content}</textarea>
-            `;
+            this.contentsElement.innerHTML = `<textarea class="content" id="content" autocomplete="off">${content}</textarea>`;
             this.filesWrapper.current =
                 this.fileHandles[this.currentIndex] || null;
         }
@@ -157,4 +158,15 @@ class File {
     }
 }
 
-export const file = new File(os);
+const filesElement = document.getElementById("files");
+const contentsElement = document.getElementById("contents");
+const newFileElement = document.getElementById("newFileBtn");
+const openFileElement = document.getElementById("openFileBtn");
+
+export const file = new File(
+    os,
+    filesElement,
+    contentsElement,
+    newFileElement,
+    openFileElement
+);
