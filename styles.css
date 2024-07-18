@@ -10,6 +10,20 @@
     --dark-background-accent-color: #555;
 }
 
+body.light-mode {
+    --text-color: #333;
+    --accent-color: #636363;
+    --background-color: #f0f0f0;
+    --background-accent-color: #e0e0e0;
+}
+
+body.dark-mode {
+    --text-color: #c2c2c2;
+    --accent-color: #ddd;
+    --background-color: #2d2d2d;
+    --background-accent-color: #555;
+}
+
 :where(textarea, input, span):focus-within {
     outline: none;
 }
@@ -21,16 +35,28 @@
     box-sizing: border-box;
 }
 
+button {
+    cursor: pointer;
+    background-color: inherit;
+    color: inherit;
+}
+
+textarea {
+    background-color: inherit;
+    color: inherit;
+}
+
 /* Global */
 body {
     min-height: 100vh;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
 }
 
 /* Header */
 header {
-    background-color: var(--light-background-color);
-    border-bottom: 1px solid var(--light-background-accent-color);
+    border-bottom: 1px solid var(--background-accent-color);
     display: flex;
     align-items: center;
     padding: 5px 10px;
@@ -48,12 +74,12 @@ header .filename {
 }
 
 header .filename.current {
-    background-color: var(--light-background-accent-color);
-    border: 1px solid var(--light-background-accent-color);
+    border: 1px solid var(--background-accent-color);
 }
 
 header .btn-action {
-    background-color: var(--light-accent-color);
+    background-color: var(--background-accent-color);
+    color: var(--text-color);
     border: none;
     padding: 5px 10px;
     border-radius: 3px;
@@ -62,7 +88,8 @@ header .btn-action {
 }
 
 header .btn-action:hover {
-    background-color: #0492ff;
+    scale: 1.05;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Main Content */
@@ -88,7 +115,6 @@ main .content {
 .message {
     display: block;
     font-weight: bold;
-    background-color: #f9f8f8;
     padding: 10px;
     border-left: 4px solid var(--accent-color);
     margin-bottom: 10px;
@@ -101,44 +127,4 @@ main .content {
 
 .recommend {
     --accent-color: #4a90e2;
-}
-
-/* Dark Mode */
-body.dark-mode {
-    color: var(--dark-text-color);
-    background-color: var(--dark-background-color);
-}
-
-body.dark-mode header {
-    background-color: var(--dark-background-color);
-    border-bottom: 1px solid var(--dark-background-accent-color);
-}
-
-body.dark-mode header .filename.current {
-    background-color: var(--dark-background-accent-color);
-    border: 1px solid var(--dark-background-accent-color);
-}
-
-body.dark-mode main .content {
-    background-color: var(--dark-background-color);
-    color: var(--dark-text-color);
-    border: 1px solid var(--dark-background-accent-color);
-}
-
-body.dark-mode main .content.current {
-    border: 1px solid var(--dark-accent-color);
-}
-
-body.dark-mode header .btn-action {
-    background-color: var(--dark-background-accent-color);
-    color: var(--dark-text-color);
-}
-
-body.dark-mode header .btn-action:hover {
-    background-color: #777;
-}
-
-body.dark-mode .message {
-    background-color: var(--dark-background-accent-color);
-    color: var(--dark-text-color);
 }
