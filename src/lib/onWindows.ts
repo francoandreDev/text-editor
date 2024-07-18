@@ -1,5 +1,10 @@
+import { TFileHandles, TFilesWrapper } from "../types/file";
+
 export class WindowsFile {
-    static async openExistingFile(createTab, fileHandles) {
+    static async openExistingFile(
+        createTab: Function,
+        fileHandles: TFileHandles
+    ) {
         try {
             const fileHandle = await getFile();
 
@@ -11,7 +16,7 @@ export class WindowsFile {
         }
 
         async function getFile() {
-            const [fileHandle] = await window.showOpenFilePicker({
+            const [fileHandle] = await (window as any).showOpenFilePicker({
                 types: [
                     {
                         description: "Text Files",
@@ -23,15 +28,21 @@ export class WindowsFile {
             return fileHandle;
         }
 
-        async function getInfo(fileHandle) {
+        async function getInfo(fileHandle: FileSystemFileHandle) {
             const file = await fileHandle.getFile();
             const content = await file.text();
             createTab(file.name, content);
-            fileHandles.push(fileHandle);
+            fileHandles.push({
+                handle: fileHandle,
+                name: file.name,
+                blob: null,
+            });
         }
     }
 
-    static async saveContent(...args) {
+    static async saveContent(
+        ...args: [TFilesWrapper, HTMLElement, TFileHandles, HTMLElement, number]
+    ) {
         const [
             filesWrapper,
             filesElement,
@@ -40,7 +51,7 @@ export class WindowsFile {
             currentIndex,
         ] = args;
 
-        if (!filesWrapper.currentFileHandle) {
+        if (!filesWrapper.current) {
             const res = await createNewFileForSave();
             if (!res) return;
         }
@@ -49,10 +60,13 @@ export class WindowsFile {
 
         async function createNewFileForSave() {
             try {
-                const newFileHandle = await window.showSaveFilePicker({
-                    suggestedName:
-                        filesElement.querySelector(".filename.current")
-                            .textContent || "Untitled.txt",
+                const element = filesElement.querySelector(".filename.current");
+                const suggestedName = element
+                    ? element.textContent || "Untitled.txt"
+                    : "Untitled.txt";
+
+                const newFileHandle = await (window as any).showSaveFilePicker({
+                    suggestedName,
                     types: [
                         {
                             description: "Text Files",
@@ -60,7 +74,7 @@ export class WindowsFile {
                         },
                     ],
                 });
-                filesWrapper.currentFileHandle = newFileHandle;
+                filesWrapper.current = newFileHandle;
                 fileHandles[currentIndex] = newFileHandle;
             } catch (error) {
                 alert("Error cerrando el archivo: " + error);
@@ -70,11 +84,15 @@ export class WindowsFile {
         }
 
         async function saveTextFile() {
+            if (!filesWrapper.current || !filesWrapper.current.handle) return;
             try {
                 const writable =
-                    await filesWrapper.currentFileHandle.createWritable();
-                const currentContent =
-                    contentsElement.querySelector(".content").value;
+                    await filesWrapper.current.handle.createWritable();
+                const currentContent = (
+                    contentsElement.querySelector(
+                        ".content"
+                    ) as HTMLInputElement
+                ).value;
                 await writable.write(currentContent);
                 await writable.close();
             } catch (error) {

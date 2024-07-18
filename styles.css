@@ -41,6 +41,10 @@ header .filename {
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 3px;
+    max-width: 6.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 header .filename.current {

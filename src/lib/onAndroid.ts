@@ -1,15 +1,27 @@
+import { TFileHandles } from "../types/file";
+
 export class AndroidFile {
-    static async openExistingFile(createTab, fileHandles) {
+    static async openExistingFile(
+        createTab: Function,
+        fileHandles: TFileHandles
+    ) {
         try {
             const input = document.createElement("input");
             input.type = "file";
             input.accept = "text/plain";
             input.onchange = async (event) => {
-                const file = event.target.files[0];
+                if (!event.target) return;
+                const target = event.target as HTMLInputElement;
+                if (!target.files) return;
+                const file = target.files[0];
                 if (file) {
                     const content = await file.text();
                     createTab(file.name, content);
-                    fileHandles.push({ handle: file, name: file.name }); // Store the file reference
+                    fileHandles.push({
+                        handle: file as unknown as FileSystemFileHandle,
+                        name: file.name,
+                        blob: null,
+                    });
                 }
             };
             input.click();
@@ -18,9 +30,13 @@ export class AndroidFile {
         }
     }
 
-    static async saveContent(...args) {
+    static async saveContent(
+        ...args: [HTMLElement, TFileHandles, HTMLElement, number]
+    ) {
         const [filesElement, fileHandles, contentsElement, currentIndex] = args;
-        const currentContent = contentsElement.querySelector(".content").value;
+        const currentContent = (
+            contentsElement.querySelector(".content") as HTMLInputElement
+        ).value;
         const blob = new Blob([currentContent], { type: "text/plain" });
 
         // Check if the file has been saved previously and use that reference
@@ -34,9 +50,11 @@ export class AndroidFile {
         downloadTextDocument();
 
         function downloadTextDocument() {
-            const link = document.createElement("a");
+            const link: HTMLAnchorElement = document.createElement(
+                "a"
+            ) as HTMLAnchorElement;
             link.href = URL.createObjectURL(blob);
-            link.download = fileReference;
+            link.download = fileReference || "defaultFileName.txt";
             link.style.display = "none";
 
             document.body.appendChild(link);
@@ -50,7 +68,7 @@ export class AndroidFile {
 
         function updateAndDownload() {
             const suggestedName =
-                filesElement.querySelector(".filename.current").textContent ||
+                filesElement.querySelector(".filename.current")?.textContent ||
                 "Untitled.txt";
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);

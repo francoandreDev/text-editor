@@ -1,10 +1,28 @@
-import { AndroidFile } from "../lib/onAndroid.js";
-import { WindowsFile } from "../lib/onWindows.js";
-import { moveCursorToEnd } from "../utils/textarea.js";
-import { os } from "../lib/DetectOS.js";
+import { AndroidFile } from "../lib/onAndroid";
+import { WindowsFile } from "../lib/onWindows";
+import { moveCursorToEnd } from "../utils/textarea";
+import { os } from "../lib/DetectOS";
+import { TFileHandles, TFilesWrapper } from "../types/file";
 
 class File {
-    constructor(...args) {
+    os: string;
+    __contents: string[];
+    fileHandles: TFileHandles;
+    filesWrapper: TFilesWrapper;
+    currentIndex: number;
+    filesElement: HTMLElement;
+    contentsElement: HTMLElement;
+    newFileElement: HTMLButtonElement;
+    openFileElement: HTMLButtonElement;
+    constructor(
+        ...args: [
+            string,
+            HTMLElement,
+            HTMLElement,
+            HTMLButtonElement,
+            HTMLButtonElement
+        ]
+    ) {
         [
             this.os,
             this.filesElement,
@@ -12,10 +30,6 @@ class File {
             this.newFileElement,
             this.openFileElement,
         ] = args;
-        this.initializeVariables();
-    }
-
-    initializeVariables() {
         this.__contents = [];
         this.fileHandles = [];
         this.filesWrapper = { current: null };
@@ -97,7 +111,7 @@ class File {
         }
     }
 
-    createTab(fileName, content) {
+    createTab(fileName: string, content: string) {
         const newSpan = document.createElement("span");
         newSpan.classList.add("filename");
         newSpan.setAttribute("contenteditable", "true");
@@ -109,56 +123,67 @@ class File {
         this.updateCurrentTab(newSpan);
 
         this.contentsElement.innerHTML = `<textarea class="content" id="content" autocomplete="off">${content}</textarea>`;
-        const textarea = document.getElementById("content");
+        const textarea: HTMLTextAreaElement = document.getElementById(
+            "content"
+        ) as HTMLTextAreaElement;
         moveCursorToEnd(textarea);
         this.filesWrapper.current = this.fileHandles[this.currentIndex] || null;
     }
 
-    switchTab(event) {
-        if (event.target.classList.contains("filename")) {
+    switchTab(event: MouseEvent) {
+        if (!event.target) return;
+        const target = event.target as Element;
+        if (target.classList.contains("filename")) {
             this.saveCurrentContent();
 
             const filenameElements = document.querySelectorAll(".filename");
             filenameElements.forEach((el) => el.classList.remove("current"));
-            event.target.classList.add("current");
-            this.currentIndex = Array.from(filenameElements).indexOf(
-                event.target
-            );
+            target.classList.add("current");
+            this.currentIndex = Array.from(filenameElements).indexOf(target);
             const content = this.currentContent;
             this.contentsElement.innerHTML = `<textarea class="content" id="content" autocomplete="off">${content}</textarea>`;
-            const textarea = document.getElementById("content");
+            const textarea: HTMLTextAreaElement = document.getElementById(
+                "content"
+            ) as HTMLTextAreaElement;
             moveCursorToEnd(textarea);
             this.filesWrapper.current =
                 this.fileHandles[this.currentIndex] || null;
         }
     }
 
-    updateCurrentTab(span) {
+    updateCurrentTab(span: HTMLSpanElement) {
         const filenameElements = document.querySelectorAll(".filename");
         filenameElements.forEach((el) => el.classList.remove("current"));
         span.classList.add("current");
     }
 
     saveCurrentContent() {
-        const textarea = this.contentsElement.querySelector(".content");
+        const textarea: HTMLTextAreaElement =
+            this.contentsElement.querySelector(
+                ".content"
+            ) as HTMLTextAreaElement;
         if (textarea) {
             this.__contents[this.currentIndex] = textarea.value;
         }
     }
 
-    debounce(func, wait) {
-        let timeout;
-        return function (...args) {
+    debounce(func: Function, wait: number) {
+        let timeout: ReturnType<typeof setTimeout>;
+        return (...args: any) => {
             clearTimeout(timeout);
             timeout = setTimeout(() => func.apply(this, args), wait);
         };
     }
 }
 
-const filesElement = document.getElementById("files");
-const contentsElement = document.getElementById("contents");
-const newFileElement = document.getElementById("newFileBtn");
-const openFileElement = document.getElementById("openFileBtn");
+const filesElement = document.getElementById("files") as HTMLElement;
+const contentsElement = document.getElementById("contents") as HTMLElement;
+const newFileElement = document.getElementById(
+    "newFileBtn"
+) as HTMLButtonElement;
+const openFileElement = document.getElementById(
+    "openFileBtn"
+) as HTMLButtonElement;
 
 export const file = new File(
     os,

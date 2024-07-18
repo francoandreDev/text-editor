@@ -1,14 +1,14 @@
 class Theme {
-    constructor(switcherBtn) {
-        this.initializeVariables();
-        this.switcherBtn = switcherBtn;
-        this.switcherBtn.textContent = this.currentName;
-    }
-
-    initializeVariables() {
+    switcherBtn: HTMLButtonElement;
+    modes: string[];
+    names: string[];
+    current: number;
+    constructor(switcherBtn: HTMLButtonElement) {
         this.modes = ["light-mode", "dark-mode"];
         this.names = ["modo claro", "modo oscuro"];
         this.current = 0;
+        this.switcherBtn = switcherBtn;
+        this.switcherBtn.textContent = this.currentName;
     }
 
     eventListener() {
@@ -58,6 +58,6 @@ class Theme {
     }
 }
 
-const switcherBtn = document.getElementById("switcherBtn");
+const switcherBtn = document.getElementById("switcherBtn") as HTMLButtonElement;
 const currentTheme = new Theme(switcherBtn);
 export { currentTheme };
