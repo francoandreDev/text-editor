@@ -83,7 +83,35 @@ class Autocomplete {
         if (this.dictSymbols["("] !== this.dictSymbols[")"]) flag = false;
         if (this.dictSymbols["["] !== this.dictSymbols["]"]) flag = false;
         if (this.dictSymbols["{"] !== this.dictSymbols["}"]) flag = false;
-        return flag;
+        return this.isBalanceWithOrder(textArea.value) && flag;
+    }
+
+    isBalanceWithOrder(input: string) {
+        const stack = [];
+        const opening = ["{", "[", "(", "¡", "¿"];
+        const closing = ["}", "]", ")", "!", "?"];
+        const matches = {
+            "}": "{",
+            "]": "[",
+            ")": "(",
+            "!": "¡",
+            "?": "¿",
+        };
+
+        for (let char of input) {
+            if (opening.includes(char)) {
+                stack.push(char);
+            } else if (closing.includes(char)) {
+                if (
+                    stack.length === 0 ||
+                    stack.pop() !== matches[char as keyof typeof matches]
+                ) {
+                    return false;
+                }
+            }
+        }
+
+        return stack.length === 0;
     }
 
     balance(textArea: HTMLTextAreaElement) {
@@ -188,6 +216,7 @@ export function addInputEventListener(textArea: HTMLTextAreaElement) {
             if (input.key === "Enter") {
                 e.preventDefault();
                 checkGrammar.addPointAtTheEnd(textArea);
+                if (os === "android") textArea.value += "\n";
                 firstEnter = false;
             }
         } else {
