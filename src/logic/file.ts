@@ -3,6 +3,7 @@ import { WindowsFile } from "../lib/onWindows";
 import { moveCursorToEnd } from "../utils/textarea";
 import { os } from "../lib/DetectOS";
 import { TFileHandles, TFilesWrapper } from "../types/file";
+import { addInputEventListener } from "./autocomplete";
 
 class File {
     os: string;
@@ -126,6 +127,7 @@ class File {
         const textarea: HTMLTextAreaElement = document.getElementById(
             "content"
         ) as HTMLTextAreaElement;
+        addInputEventListener(textarea);
         moveCursorToEnd(textarea);
         this.filesWrapper.current = this.fileHandles[this.currentIndex] || null;
     }
@@ -145,6 +147,7 @@ class File {
             const textarea: HTMLTextAreaElement = document.getElementById(
                 "content"
             ) as HTMLTextAreaElement;
+            addInputEventListener(textarea);
             moveCursorToEnd(textarea);
             this.filesWrapper.current =
                 this.fileHandles[this.currentIndex] || null;
