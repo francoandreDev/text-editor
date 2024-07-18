@@ -51,7 +51,7 @@ export class WindowsFile {
             currentIndex,
         ] = args;
 
-        if (!filesWrapper.current) {
+        if (!filesWrapper.current?.handle) {
             const res = await createNewFileForSave();
             if (!res) return;
         }
@@ -74,7 +74,11 @@ export class WindowsFile {
                         },
                     ],
                 });
-                filesWrapper.current = newFileHandle;
+                filesWrapper.current = {
+                    handle: newFileHandle,
+                    name: newFileHandle.name,
+                    blob: null,
+                };
                 fileHandles[currentIndex] = newFileHandle;
             } catch (error) {
                 alert("Error cerrando el archivo: " + error);
@@ -84,14 +88,14 @@ export class WindowsFile {
         }
 
         async function saveTextFile() {
-            if (!filesWrapper.current || !filesWrapper.current.handle) return;
             try {
-                const writable =
-                    await filesWrapper.current.handle.createWritable();
+                const writable = await (
+                    filesWrapper.current?.handle as any
+                ).createWritable();
                 const currentContent = (
                     contentsElement.querySelector(
-                        ".content"
-                    ) as HTMLInputElement
+                        "#content"
+                    ) as HTMLTextAreaElement
                 ).value;
                 await writable.write(currentContent);
                 await writable.close();
