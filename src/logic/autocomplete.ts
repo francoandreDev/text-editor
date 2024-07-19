@@ -208,26 +208,21 @@ export function addInputEventListener(textArea: HTMLTextAreaElement) {
                     autocomplete.balance(textArea);
                     checkGrammar.grammar(textArea);
                 }
-                if (firstEnter) {
-                    if (input.key === "Enter") {
-                        // the first line needs to be a prevent default, can't be a conditional statement
+                if (input.key === "Enter") {
+                    if (firstEnter) {
                         e.preventDefault();
                         checkGrammar.addPointAtTheEnd(textArea);
                         firstEnter = false;
-                    }
-                } else {
-                    if (input.key === "Enter") {
+                    } else {
                         firstEnter = true;
                     }
                 }
                 break;
             case "android":
-                e.preventDefault();
-                autocomplete.balance(textArea);
-                checkGrammar.grammar(textArea);
-
                 if (input.key === "Enter") {
                     e.preventDefault();
+                    autocomplete.balance(textArea);
+                    checkGrammar.grammar(textArea);
                     checkGrammar.addPointAtTheEnd(textArea);
                     textArea.value += "\n";
                 }
@@ -236,7 +231,5 @@ export function addInputEventListener(textArea: HTMLTextAreaElement) {
         const res: boolean = checkGrammar.isOk(textArea);
         if (!res) textArea.style.borderColor = "#ff0000";
         else textArea.style.borderColor = "";
-
-        
     });
 }
