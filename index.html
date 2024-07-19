@@ -11,7 +11,9 @@
     <script type="module" src="./src/lib/onAndroid.ts" defer></script>
     <script type="module" src="./src/logic/themes.ts" defer></script>
     <script type="module" src="./src/logic/autocomplete.ts" defer></script>
+    <script type="module" src="./src/logic/messages.ts" defer></script>
     <script type="module" src="./src/main.ts" defer></script>
+    <script src="https://kit.fontawesome.com/e00d06d5d7.js"></script>
 </head>
 
 <body class="dark-mode">
@@ -23,14 +25,15 @@
     <main id="contents">
         <b class="message recommend">El uso recomendado es para la creación y la edición de archivos de
             texto.</b>
-        <b class="message warning">Si el archivo ha sido editado externamente ciérrelo y use el botón
+        <b class="message new">Si el archivo ha sido editado externamente ciérrelo y use el botón
             abrir antes de seguir trabajando.</b>
-        <b class="message new">En windows tras dos segundos de inactividad se guardará el archivo y para la primera vez
+        <b class="message warning">En windows tras dos segundos de inactividad se guardará el archivo y para la primera
+            vez
             pedirá confirmación.</b>
-        <b class="message new">En android tras 15 segundos de inactividad se descargará el archivo, si el nombre de
+        <b class="message warning">En android tras 15 segundos de inactividad se descargará el archivo, si el nombre de
             archivo ya existe pedirá confirmación.</b>
     </main>
-
+    <footer id="footer" class="line end-line"></footer>
 </body>
 
 </html>

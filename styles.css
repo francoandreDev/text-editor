@@ -1,13 +1,6 @@
 /* Variables */
 :root {
-    --light-text-color: #333;
-    --dark-text-color: #ccc;
-    --light-accent-color: #dedede;
-    --dark-accent-color: #ddd;
-    --light-background-color: #f0f0f0;
-    --dark-background-color: #2d2d2d;
-    --light-background-accent-color: #e0e0e0;
-    --dark-background-accent-color: #555;
+    --height-footer-message: 50px;
 }
 
 body.light-mode {
@@ -52,6 +45,11 @@ body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     color: var(--text-color);
     background-color: var(--background-color);
+}
+
+progress {
+    background-color: inherit;
+    accent-color: var(--accent-color);
 }
 
 /* Header */
@@ -102,7 +100,7 @@ main {
 
 main .content {
     width: 100%;
-    min-height: calc(100svh - 65px);
+    min-height: calc(100svh - 65px - var(--height-footer-message));
     padding: 10px;
     border-radius: 3px;
     font-size: 14px;
@@ -119,6 +117,7 @@ main .content {
     border-left: 4px solid var(--accent-color);
     margin-bottom: 10px;
     border-radius: 4px;
+    background-color: var(--background-accent-color);
 }
 
 .warning {
@@ -127,4 +126,30 @@ main .content {
 
 .recommend {
     --accent-color: #4a90e2;
+}
+
+/* footer */
+
+footer {
+    height: var(--height-footer-message);
+    border-top: 1px solid var(--background-accent-color);
+    padding: 10px;
+
+    & .message {
+        border-left: none;
+        margin-bottom: 0;
+        background-color: transparent;
+    }
+}
+
+.line {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.end-line {
+    justify-content: flex-end;
 }

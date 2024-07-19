@@ -4,6 +4,9 @@ import { moveCursorToEnd } from "../utils/textarea";
 import { os } from "../lib/DetectOS";
 import { TFileHandles, TFilesWrapper } from "../types/file";
 import { addInputEventListener } from "./autocomplete";
+import { InactivityTimer } from "../lib/InactivityTimer";
+
+let inactiveTimer: null | InactivityTimer = null;
 
 class File {
     os: string;
@@ -15,6 +18,8 @@ class File {
     contentsElement: HTMLElement;
     newFileElement: HTMLButtonElement;
     openFileElement: HTMLButtonElement;
+    footerElement: HTMLElement;
+    inactiveTimer: null | InactivityTimer;
     constructor(
         ...args: [
             string,
@@ -35,6 +40,8 @@ class File {
         this.fileHandles = [];
         this.filesWrapper = { current: null };
         this.currentIndex = 0;
+        this.footerElement = document.getElementById("footer") as HTMLElement;
+        this.inactiveTimer = null;
     }
 
     eventListeners() {
@@ -71,6 +78,8 @@ class File {
             });
             this.currentIndex = this.fileHandles.length - 1;
             this.filesWrapper.current = null;
+        } else {
+            this.inactiveTimer?.addErrorMessage("Error al crear el archivo");
         }
     }
 
@@ -79,13 +88,15 @@ class File {
             case "android":
                 await AndroidFile.openExistingFile(
                     this.createTab.bind(this),
-                    this.fileHandles
+                    this.fileHandles,
+                    this.inactiveTimer
                 );
                 break;
             default:
                 await WindowsFile.openExistingFile(
                     this.createTab.bind(this),
-                    this.fileHandles
+                    this.fileHandles,
+                    this.inactiveTimer
                 );
         }
     }
@@ -98,7 +109,8 @@ class File {
                     this.filesElement,
                     this.fileHandles,
                     this.contentsElement,
-                    this.currentIndex
+                    this.currentIndex,
+                    this.inactiveTimer
                 );
                 break;
             default:
@@ -107,7 +119,8 @@ class File {
                     this.filesElement,
                     this.fileHandles,
                     this.contentsElement,
-                    this.currentIndex
+                    this.currentIndex,
+                    this.inactiveTimer
                 );
         }
     }
@@ -127,6 +140,11 @@ class File {
         const textarea: HTMLTextAreaElement = document.getElementById(
             "content"
         ) as HTMLTextAreaElement;
+        this.inactiveTimer = new InactivityTimer(
+            textarea,
+            this.footerElement,
+            this.os
+        );
         addInputEventListener(textarea);
         moveCursorToEnd(textarea);
         this.filesWrapper.current = this.fileHandles[this.currentIndex] || null;
@@ -147,8 +165,14 @@ class File {
             const textarea: HTMLTextAreaElement = document.getElementById(
                 "content"
             ) as HTMLTextAreaElement;
+            this.inactiveTimer = new InactivityTimer(
+                textarea,
+                this.footerElement,
+                this.os
+            );
             addInputEventListener(textarea);
             moveCursorToEnd(textarea);
+
             this.filesWrapper.current =
                 this.fileHandles[this.currentIndex] || null;
         }
@@ -176,6 +200,10 @@ class File {
             clearTimeout(timeout);
             timeout = setTimeout(() => func.apply(this, args), wait);
         };
+    }
+
+    getInactiveTimer() {
+        return this.inactiveTimer;
     }
 }
 

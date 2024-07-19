@@ -1,9 +1,11 @@
 import { TFileHandles } from "../types/file";
+import { InactivityTimer } from "./InactivityTimer";
 
 export class AndroidFile {
     static async openExistingFile(
         createTab: Function,
-        fileHandles: TFileHandles
+        fileHandles: TFileHandles,
+        inactivityTimer: InactivityTimer | null
     ) {
         try {
             const input = document.createElement("input");
@@ -26,14 +28,14 @@ export class AndroidFile {
             };
             input.click();
         } catch (error) {
-            alert("Error al abrir el archivo: " + error);
+            inactivityTimer?.addErrorMessage("Error al abrir el archivo");
         }
     }
 
     static async saveContent(
-        ...args: [HTMLElement, TFileHandles, HTMLElement, number]
+        ...args: [HTMLElement, TFileHandles, HTMLElement, number, InactivityTimer | null]
     ) {
-        const [filesElement, fileHandles, contentsElement, currentIndex] = args;
+        const [filesElement, fileHandles, contentsElement, currentIndex, inactivityTimer] = args;
         const currentContent = (
             contentsElement.querySelector(".content") as HTMLInputElement
         ).value;
@@ -44,6 +46,7 @@ export class AndroidFile {
             fileHandles[currentIndex] && fileHandles[currentIndex].name;
         if (!fileReference) {
             updateAndDownload();
+            inactivityTimer?.addWarningMessage("El archivo no ha sido guardado previamente");
             return;
         }
         //? Create a hidden download link and click it to simulate saving the file

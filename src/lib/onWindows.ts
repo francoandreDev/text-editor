@@ -1,9 +1,11 @@
 import { TFileHandles, TFilesWrapper } from "../types/file";
+import { InactivityTimer } from "./InactivityTimer";
 
 export class WindowsFile {
     static async openExistingFile(
         createTab: Function,
-        fileHandles: TFileHandles
+        fileHandles: TFileHandles,
+        inactivityTimer: InactivityTimer | null
     ) {
         try {
             const fileHandle = await getFile();
@@ -12,7 +14,7 @@ export class WindowsFile {
                 await getInfo(fileHandle);
             }
         } catch (error) {
-            alert("Error abriendo el archivo: " + error);
+            inactivityTimer?.addErrorMessage("Error al abrir el archivo");
         }
 
         async function getFile() {
@@ -41,7 +43,14 @@ export class WindowsFile {
     }
 
     static async saveContent(
-        ...args: [TFilesWrapper, HTMLElement, TFileHandles, HTMLElement, number]
+        ...args: [
+            TFilesWrapper,
+            HTMLElement,
+            TFileHandles,
+            HTMLElement,
+            number,
+            InactivityTimer | null
+        ]
     ) {
         const [
             filesWrapper,
@@ -49,6 +58,7 @@ export class WindowsFile {
             fileHandles,
             contentsElement,
             currentIndex,
+            inactivityTimer,
         ] = args;
 
         if (!filesWrapper.current?.handle) {
@@ -81,7 +91,7 @@ export class WindowsFile {
                 };
                 fileHandles[currentIndex] = newFileHandle;
             } catch (error) {
-                alert("Error cerrando el archivo: " + error);
+                inactivityTimer?.addErrorMessage("Error al crear el archivo");
                 return false;
             }
             return true;
@@ -100,7 +110,7 @@ export class WindowsFile {
                 await writable.write(currentContent);
                 await writable.close();
             } catch (error) {
-                alert("Error guardando el archivo: " + error);
+                inactivityTimer?.addErrorMessage("Error al guardar el archivo");
             }
         }
     }
