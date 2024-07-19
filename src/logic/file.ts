@@ -6,8 +6,6 @@ import { TFileHandles, TFilesWrapper } from "../types/file";
 import { addInputEventListener } from "./autocomplete";
 import { InactivityTimer } from "../lib/InactivityTimer";
 
-let inactiveTimer: null | InactivityTimer = null;
-
 class File {
     os: string;
     __contents: string[];
