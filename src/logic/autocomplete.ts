@@ -137,7 +137,7 @@ class CheckGrammar {
         this.autocomplete = new Autocomplete();
     }
 
-    grammar(textArea: HTMLTextAreaElement) {
+    toUpperCase(textArea: HTMLTextAreaElement): string {
         // after a point or at the begin of the sentence the letter will be put in upper case
         const marks = [".", "¡", "!", "¿", "?", "\n"];
         const text = textArea.value;
@@ -158,10 +158,18 @@ class CheckGrammar {
             }
         }
 
+        return temporal;
+    }
+
+    addExtraSpace(textArea: HTMLTextAreaElement, temporal: string) {
         // after a point symbol or close symbol the letter will be put after an extra space
         const newText = temporal.replace(/([.,;:)\]}!?])(?=\S|$)/g, "$1 ");
-
         textArea.value = newText;
+    }
+
+    grammar(textArea: HTMLTextAreaElement) {
+        const text = this.toUpperCase(textArea);
+        this.addExtraSpace(textArea, text);
     }
 
     addPointAtTheEnd(textArea: HTMLTextAreaElement) {
@@ -200,29 +208,35 @@ export function addInputEventListener(textArea: HTMLTextAreaElement) {
                     autocomplete.balance(textArea);
                     checkGrammar.grammar(textArea);
                 }
+                if (firstEnter) {
+                    if (input.key === "Enter") {
+                        // the first line needs to be a prevent default, can't be a conditional statement
+                        e.preventDefault();
+                        checkGrammar.addPointAtTheEnd(textArea);
+                        firstEnter = false;
+                    }
+                } else {
+                    if (input.key === "Enter") {
+                        firstEnter = true;
+                    }
+                }
                 break;
             case "android":
                 e.preventDefault();
                 autocomplete.balance(textArea);
                 checkGrammar.grammar(textArea);
 
+                if (input.key === "Enter") {
+                    e.preventDefault();
+                    checkGrammar.addPointAtTheEnd(textArea);
+                    textArea.value += "\n";
+                }
                 break;
         }
         const res: boolean = checkGrammar.isOk(textArea);
         if (!res) textArea.style.borderColor = "#ff0000";
         else textArea.style.borderColor = "";
 
-        if (firstEnter) {
-            if (input.key === "Enter") {
-                e.preventDefault();
-                checkGrammar.addPointAtTheEnd(textArea);
-                if (os === "android") textArea.value += "\n";
-                firstEnter = false;
-            }
-        } else {
-            if (input.key === "Enter") {
-                firstEnter = true;
-            }
-        }
+        
     });
 }
