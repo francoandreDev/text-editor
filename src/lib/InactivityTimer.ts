@@ -6,6 +6,7 @@ export class InactivityTimer {
     loadingPercent: number;
     growthProgressBar: number;
     inactivityLimit: number;
+    os: string;
     constructor(
         textarea: HTMLTextAreaElement,
         footer: HTMLElement,
@@ -18,6 +19,7 @@ export class InactivityTimer {
         this.loadingPercent = 0;
         this.growthProgressBar = os === "windows" ? 100 / 2 : 100 / 15;
         this.inactivityLimit = os === "windows" ? 2 : 15;
+        this.os = os;
 
         this.textarea.addEventListener("input", () => this.reiniciarContador());
         this.iniciarContador();
@@ -70,9 +72,19 @@ export class InactivityTimer {
     }
 
     addOkMessage() {
-        this.clearFooter();
-        this.addOKIconElement();
-        this.addMessageElement("Guardado");
+        if (this.os === "android") {
+            setTimeout(() => {
+                this.clearFooter();
+                this.addOKIconElement();
+                this.addMessageElement("Guardado");
+            }, 15 * 1000);
+        } else {
+            setTimeout(() => {
+                this.clearFooter();
+                this.addOKIconElement();
+                this.addMessageElement("Guardado");
+            }, 2 * 1000);
+        }
     }
 
     addOKIconElement() {
@@ -98,8 +110,14 @@ export class InactivityTimer {
     }
 
     growthProgressBarElement(progressBarElement: HTMLProgressElement) {
-        this.loadingPercent += this.growthProgressBar;
-        progressBarElement.value = this.loadingPercent;
+        const interval = setInterval(() => {
+            this.loadingPercent += this.growthProgressBar;
+            if (this.loadingPercent >= 100) {
+                clearInterval(interval);
+                this.loadingPercent = 100;
+            }
+            progressBarElement.value = this.loadingPercent;
+        }, 1000);
     }
 
     addLoadingIcon() {
