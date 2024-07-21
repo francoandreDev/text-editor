@@ -1,3 +1,6 @@
+const winTime = 2;
+const androidTime = 10;
+
 export class InactivityTimer {
     textarea: HTMLTextAreaElement;
     footer: HTMLElement;
@@ -17,8 +20,9 @@ export class InactivityTimer {
         this.tiempoInactivo = 0;
         this.timeoutID = null;
         this.loadingPercent = 0;
-        this.growthProgressBar = os === "windows" ? 50 : 7;
-        this.inactivityLimit = os === "windows" ? 2 : 15;
+        this.growthProgressBar =
+            os === "windows" ? 100 / winTime : 100 / androidTime;
+        this.inactivityLimit = os === "windows" ? winTime : androidTime;
         this.os = os;
 
         this.textarea.addEventListener("input", () => this.reiniciarContador());
@@ -78,13 +82,13 @@ export class InactivityTimer {
                 this.clearFooter();
                 this.addOKIconElement();
                 this.addMessageElement("Guardado");
-            }, 15 * 1000);
+            }, androidTime * 1000);
         } else {
             setTimeout(() => {
                 this.clearFooter();
                 this.addOKIconElement();
                 this.addMessageElement("Guardado");
-            }, 2 * 1000);
+            }, winTime * 1000);
         }
     }
 
