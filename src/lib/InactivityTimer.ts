@@ -17,7 +17,7 @@ export class InactivityTimer {
         this.tiempoInactivo = 0;
         this.timeoutID = null;
         this.loadingPercent = 0;
-        this.growthProgressBar = os === "windows" ? 100 / 2 : 100 / 15;
+        this.growthProgressBar = os === "windows" ? 50 : 6.66666666666667;
         this.inactivityLimit = os === "windows" ? 2 : 15;
         this.os = os;
 
