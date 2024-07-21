@@ -56,7 +56,7 @@ class File {
             "input",
             this.debounce(
                 this.saveContent.bind(this),
-                this.os === "android" ? 15000 : 2000
+                this.os === "android" ? 15 * 1000 : 2 * 1000
             )
         );
     }

@@ -36,6 +36,7 @@ export class InactivityTimer {
     }
 
     reiniciarContador() {
+        clearInterval(this.timeoutID as number);
         this.tiempoInactivo = 0;
         this.loadingPercent = 0;
         this.clearFooter();
@@ -114,8 +115,7 @@ export class InactivityTimer {
             this.loadingPercent += this.growthProgressBar;
             if (this.loadingPercent >= 100) {
                 clearInterval(interval);
-                this.loadingPercent = 100;
-                alert(this.loadingPercent + "%");
+                progressBarElement.value = 100;
             }
             progressBarElement.value = this.loadingPercent;
         }, 1000);
