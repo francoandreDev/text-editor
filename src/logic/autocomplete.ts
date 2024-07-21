@@ -163,7 +163,7 @@ class CheckGrammar {
 
     addExtraSpace(textArea: HTMLTextAreaElement, temporal: string) {
         // after a point symbol or close symbol the letter will be put after an extra space
-        const newText = temporal.replace(/([.,;:)\]}!?])(?=\S|$)/g, "$1 ");
+        const newText = temporal.replace(/([,;:!?])(?=\S|$)/g, "$1 ");
         textArea.value = newText;
     }
 
@@ -178,6 +178,7 @@ class CheckGrammar {
         const prevSymbol = textArea.value[textArea.value.length - 2];
         if (prevSymbol === " ") return;
         if (symbol === "\n") return;
+        if (symbol === ".") return;
         if (
             !endPointMarks.includes(symbol) &&
             symbol !== " " &&
@@ -194,7 +195,6 @@ class CheckGrammar {
 }
 
 export function addInputEventListener(textArea: HTMLTextAreaElement) {
-    let firstEnter = true;
     textArea.addEventListener("keydown", (e: Event) => {
         const input: KeyboardEvent = e as KeyboardEvent;
 
@@ -209,22 +209,14 @@ export function addInputEventListener(textArea: HTMLTextAreaElement) {
                     checkGrammar.grammar(textArea);
                 }
                 if (input.key === "Enter") {
-                    if (firstEnter) {
-                        e.preventDefault();
-                        checkGrammar.addPointAtTheEnd(textArea);
-                        firstEnter = false;
-                    } else {
-                        firstEnter = true;
-                    }
+                    checkGrammar.addPointAtTheEnd(textArea);
                 }
                 break;
             case "android":
                 if (input.key === "Enter") {
-                    e.preventDefault();
                     autocomplete.balance(textArea);
                     checkGrammar.grammar(textArea);
                     checkGrammar.addPointAtTheEnd(textArea);
-                    textArea.value += "\n";
                 }
                 break;
         }
