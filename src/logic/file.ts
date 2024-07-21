@@ -4,7 +4,7 @@ import { moveCursorToEnd } from "../utils/textarea";
 import { os } from "../lib/DetectOS";
 import { TFileHandles, TFilesWrapper } from "../types/file";
 import { addInputEventListener } from "./autocomplete";
-import { InactivityTimer } from "../lib/InactivityTimer";
+import { InactivityTimer, androidTime, winTime } from "../lib/InactivityTimer";
 
 class File {
     os: string;
@@ -56,7 +56,7 @@ class File {
             "input",
             this.debounce(
                 this.saveContent.bind(this),
-                this.os === "android" ? 15 * 1000 : 2 * 1000
+                this.os === "android" ? androidTime * 1000 : winTime * 1000
             )
         );
     }

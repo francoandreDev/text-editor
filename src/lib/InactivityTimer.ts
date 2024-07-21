@@ -1,5 +1,5 @@
-const winTime = 2;
-const androidTime = 10;
+export const winTime = 2;
+export const androidTime = 10;
 
 export class InactivityTimer {
     textarea: HTMLTextAreaElement;
