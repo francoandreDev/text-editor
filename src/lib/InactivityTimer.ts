@@ -115,6 +115,7 @@ export class InactivityTimer {
             if (this.loadingPercent >= 100) {
                 clearInterval(interval);
                 this.loadingPercent = 100;
+                alert(this.loadingPercent + "%");
             }
             progressBarElement.value = this.loadingPercent;
         }, 1000);
